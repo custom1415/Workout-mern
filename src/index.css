@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+body {
+  margin: 0;
+  font-family: Basement Grotesque;
+  scroll-behavior: smooth;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+}
+*::-webkit-scrollbar {
+  display: none;
+}
+.modal-backdrop {
+  display: none;
+}
+@font-face {
+  font-family: "Basement Grotesque";
+  src: local("Basement Grotesque"),
+    url("./assets/fonts/Basement-Grotesque.otf") format("opentype");
+  font-weight: bold;
+}
