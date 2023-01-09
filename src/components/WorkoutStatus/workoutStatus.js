@@ -88,10 +88,13 @@
 
 import { memo, useEffect, useRef, useState } from "react";
 import { FaChevronLeft, FaChevronRight, FaChevronUp } from "react-icons/fa";
+import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import {
+  resetRest,
   selectCurrentDayWorkouts,
   selectCurrentIndex,
+  selectRestCount,
 } from "../../redux/workout/workout";
 import { Button } from "../Button/button";
 import RestTimer from "../rest-timer/restTimer";
@@ -102,8 +105,7 @@ export const WorkoutStatus = ({ time, restStatus }) => {
 
   const [progress, setProgress] = useState(0);
   const [shouldCarousel, setShouldCarousel] = useState(false);
-  const [restTime, setRestTime] = useState(0);
-  const [restsCompleted, setRestsCompleted] = useState(0);
+  // const [restsCompleted, setRestsCompleted] = useState(0);
 
   const currentDayWorkouts = useSelector(selectCurrentDayWorkouts);
   const [workoutsCompleted, setWorkoutsCompleted] = useState(0);
@@ -116,9 +118,12 @@ export const WorkoutStatus = ({ time, restStatus }) => {
     ...currentDayWorkouts.slice(1),
   ]);
   const [previousWorkouts, setPreviousWorkouts] = useState([]);
-  const getRestCount = (val) => {
-    setRestsCompleted(val);
-  };
+
+  const restsCompleted = useSelector(selectRestCount);
+  const dispatch = useDispatch();
+  // const getRestCount = (val) => {
+  //   setRestsCompleted(val);
+  // };
   // useEffect(() => {
   //   console.log(currentWorkout, nextWorkouts, previousWorkouts);
   //   // let interval;
@@ -149,7 +154,7 @@ export const WorkoutStatus = ({ time, restStatus }) => {
         (previousWorkouts.length / currentDayWorkouts.length) * 100;
       setProgress(percent.toFixed());
       console.log(restsCompleted, Number(sets));
-      if (restsCompleted == Number(sets)) {
+      if (restsCompleted === Number(sets)) {
         console.log("kk");
         // console.log(currentWorkout[0]);
         setProgress(0);
@@ -160,7 +165,9 @@ export const WorkoutStatus = ({ time, restStatus }) => {
           setPreviousWorkouts((previous) => [currentWorkout[0], ...previous]);
 
           setCurrentWorkout([nextWorkouts[0] || null]);
-          setRestsCompleted(0);
+          // setRestsCompleted(0);
+          //
+          dispatch(resetRest());
           if (nextWorkouts.length) {
             setNextWorkouts(nextWorkouts.splice(1));
           }
@@ -300,7 +307,7 @@ export const WorkoutStatus = ({ time, restStatus }) => {
 
           <RestTimer
             currentDayWorkouts={currentDayWorkouts}
-            getRestCount={getRestCount}
+            // getRestCount={getRestCount}
             currentWorkout={currentWorkout.filter(Boolean).length}
             duration={
               currentWorkout.filter(Boolean).length

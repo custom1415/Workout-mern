@@ -54,11 +54,11 @@ export const WorkoutOrder = () => {
         <div className="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-[#0b0220] bg-clip-padding rounded-md outline-none text-current">
           <div className="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md">
             <h5
-              className="md:text-xl text-md font-medium leading-normal text-primary"
+              className="md:text-xl supersm:text-md text-sm font-medium leading-normal text-primary"
               id="workout"
             >
               <span className="text-gray-600 whitespace-nowrap">
-                Order your Workout -{" "}
+                Order your Workout -&nbsp;
               </span>
               {day || ""}
             </h5>

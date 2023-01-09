@@ -4,10 +4,7 @@ import { useState } from "react";
 import { WorkoutFooter } from "../../components/workoutFooter/workoutFooter";
 export const WorkoutPage = () => {
   const [Time, setTime] = useState(0);
-  const [RestStatus, setRestStatus] = useState(false);
-  const getRestStatus = (status) => {
-    setRestStatus(status);
-  };
+
   const getTime = (time) => {
     console.log("called");
     setTime(time);
@@ -17,8 +14,8 @@ export const WorkoutPage = () => {
       {/* <Button isFloatingBtn>
         <MdAdd />
       </Button> */}
-      <TimerComponent getTime={getTime} getRestStatus={getRestStatus} />
-      <WorkoutStatus time={Time} restStatus={RestStatus} />
+      <TimerComponent getTime={getTime} />
+      <WorkoutStatus time={Time} />
 
       <div className="lg:hidden">
         <WorkoutFooter />

@@ -30,6 +30,14 @@ export const selectToaster = createSelector(
   [selectWorkout],
   (state) => state.toaster
 );
+export const selectRestCount = createSelector(
+  [selectWorkout],
+  (state) => state.restCount
+);
+export const selectResetStatus = createSelector(
+  [selectWorkout],
+  (state) => state.resetStatus
+);
 const workoutSlice = createSlice({
   name: "workout",
   initialState: {
@@ -46,6 +54,8 @@ const workoutSlice = createSlice({
     isWorkoutListVisible: false,
     currentIndex: 1,
     workoutList: {},
+    restCount: 0,
+    resetStatus: false,
     selectOptions: [
       {
         mainFolder: "Push/Pull/Legs Split",
@@ -182,12 +192,41 @@ const workoutSlice = createSlice({
         },
       };
     },
+    resetRest: (state, action) => {
+      return {
+        ...state,
+        restCount: 0,
+        resetStatus: true,
+      };
+    },
+    activateResetStatus: (state, action) => {
+      return {
+        ...state,
+        resetStatus: false,
+      };
+    },
+    setRestCount: (state, action) => {
+      return {
+        ...state,
+        restCount: action.payload,
+      };
+    },
     setToasterVisibility: (state, action) => {
       return {
         ...state,
         toaster: {
           ...state.toaster,
           visibility: false,
+        },
+      };
+    },
+    activateToaster: (state, action) => {
+      return {
+        ...state,
+        toaster: {
+          message: action.payload,
+          success: false,
+          visibility: true,
         },
       };
     },
@@ -217,6 +256,10 @@ export const {
   setWorkoutToBeDone,
   setCurrentDayWorkouts,
   toggleWorkoutListVisibility,
-  setToasterVisibility
+  setToasterVisibility,
+  resetRest,
+  activateResetStatus,
+  activateToaster,
+  setRestCount,
 } = workoutSlice.actions;
 export default workoutSlice.reducer;

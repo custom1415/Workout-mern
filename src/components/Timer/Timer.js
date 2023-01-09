@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { setLap } from "../../redux/workout/workout";
+import { activateResetStatus, resetRest } from "../../redux/workout/workout";
+
 import { Button } from "../Button/button";
 
-export const TimerComponent = ({ getTime, getRestStatus }) => {
+export const TimerComponent = ({ getTime }) => {
   const [isActive, setIsActive] = useState(false);
   const [isPaused, setIsPaused] = useState(true);
   const [time, setTime] = useState(0);
 
   // const buttons = ["Start", "Stop", "Reset", "Rest"];
-
+  const dispatch = useDispatch();
   React.useEffect(() => {
     let interval = null;
     if (isActive && isPaused === false) {
@@ -29,6 +30,7 @@ export const TimerComponent = ({ getTime, getRestStatus }) => {
   const handleStart = () => {
     setIsActive(true);
     setIsPaused(false);
+    dispatch(activateResetStatus());
   };
 
   const handlePauseResume = () => {
@@ -38,15 +40,11 @@ export const TimerComponent = ({ getTime, getRestStatus }) => {
   const handleReset = () => {
     setIsActive(false);
     setTime(0);
-  };
-  const handleRest = () => {
-    getRestStatus(true);
+    dispatch(resetRest());
   };
 
   return (
-    <section
-      className="lg:w-1/2 sm:w-[70%] midsm:w-[85%] w-screen bg-black h-1/4 mx-auto flex justify-center items-center flex-col"
-    >
+    <section className="lg:w-1/2 sm:w-[70%] midsm:w-[85%] w-screen bg-black h-1/4 mx-auto flex justify-center items-center flex-col">
       <section className="grid grid-cols-7 w-[80%] place-content-center place-items-center">
         <span className="supersm:text-5xl text-[42px] text-white">
           {("0" + Math.floor(time / 3600000)).slice(-2)}

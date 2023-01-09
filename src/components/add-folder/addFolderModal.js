@@ -54,7 +54,7 @@ export const AddFolderModal = ({ addFolder }) => {
         </Button>
       </div>
       <div
-        className="modal fade fixed top-0 z-50 left-0 backdrop-blur-sm hidden w-screen h-full outline-none overflow-x-hidden overflow-y-auto"
+        className="modal fade fixed top-0 z-50 left-0 backdrop-blur-sm backdrop-brightness-50  hidden w-screen h-full outline-none overflow-x-hidden overflow-y-auto"
         id="ModalSm"
         tabIndex="-1"
         aria-modal="true"

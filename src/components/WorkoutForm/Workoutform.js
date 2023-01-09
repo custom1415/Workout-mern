@@ -225,6 +225,7 @@ import { Button } from "../Button/button";
 import { FormInput } from "../Forminput/forminput";
 import { useDispatch } from "react-redux";
 import {
+  activateToaster,
   addFolderHandler,
   addWorkout,
   selectIsWorkoutListVisible,
@@ -240,11 +241,11 @@ export const Form = () => {
   const dispatch = useDispatch();
 
   const defaultFormFields = {
-    exerciseName: "k",
-    sets: "2",
-    reps: "2",
-    restBetweenSets: "2",
-    restAfterSetComplete: "2",
+    exerciseName: "",
+    sets: "",
+    reps: "",
+    restBetweenSets: "",
+    restAfterSetComplete: "",
   };
 
   const [FormField, setFormField] = useState(defaultFormFields);
@@ -269,7 +270,7 @@ export const Form = () => {
     // console.log(FormField);
   };
   const resetFormFields = () => {
-    // setFormField({ ...defaultFormFields, folder: folder });
+    setFormField(defaultFormFields);
   };
 
   const { visibility: v } = useSelector(selectToaster);
@@ -284,9 +285,31 @@ export const Form = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(FormField);
-
+    if (Number(FormField["sets"]) > 12) {
+      dispatch(activateToaster("Exceeded maximum set limit 12"));
+      return;
+    }
+    if (Number(FormField["reps"]) > 60) {
+      dispatch(activateToaster("Exceeded maximum reps limit 60"));
+      return;
+    }
+    if (Number(FormField["restBetweenSets"]) > 10) {
+      dispatch(activateToaster("Exceeded maximum rest between sets limit 10"));
+      return;
+    }
+    if (Number(FormField["restAfterSetComplete"]) > 10) {
+      dispatch(
+        activateToaster("Exceeded maximum rest after set complete limit 10")
+      );
+      return;
+    }
+    if (!mainFolder) {
+      dispatch(activateToaster("Please choose a folder"));
+    }
     for (const key in FormField) {
-      if (!FormField[key]) return;
+      if (!FormField[key]) {
+        dispatch(activateToaster("Please fill in all the input fields"));
+      }
     }
 
     for (const key in folder) {
@@ -294,52 +317,28 @@ export const Form = () => {
     }
 
     dispatch(addWorkout({ mainFolder, subFolder, workout: FormField }));
+    resetFormFields();
   };
 
-  // const addFolderHandler = (folderParam, SubFolderValue) => {
-  //   let mainFolderExists = false;
-  //   let mainFolderIndex;
-  //   console.log(folderParam);
-
-  //   // Check if main folderParam already exists in addedFolder
-  //   addedFolder.forEach((f, index) => {
-  //     if (f.mainFolder === folderParam.mainFolder) {
-  //       mainFolderExists = true;
-  //       mainFolderIndex = index;
-  //     }
-  //   });
-
-  //   // If main folderParam doesn't exist, add it to addedFolder
-  //   if (!mainFolderExists) {
-  //     setAddedFolder([
-  //       ...addedFolder,
-  //       {
-  //         mainFolder: folderParam.mainFolder,
-  //         subFolder: SubFolderValue,
-  //       },
-  //     ]);
-  //   } else {
-  //     // If main folderParam exists, add subfolder to the main folderParam's subfolder object
-  //     const updatedFolders = [...addedFolder];
-
-  //     updatedFolders[mainFolderIndex] = {
-  //       mainFolder: updatedFolders[mainFolderIndex].mainFolder,
-
-  //       subFolder: {
-  //         ...updatedFolders[mainFolderIndex].subFolder,
-  //         ...SubFolderValue,
-  //       },
-  //     };
-  //     setAddedFolder(updatedFolders);
-  //   }
-  // };
   const isWorkoutListVisible = useSelector(selectIsWorkoutListVisible);
   const { message, visibility, success } = useSelector(selectToaster);
   const handleClick = () => {
     dispatch(toggleWorkoutListVisibility(!isWorkoutListVisible));
   };
+
+  const submitOnEnter = (e) => {
+    if (e.key === "Enter") {
+      handleSubmit(e);
+      return;
+    }
+    return;
+  };
+
   return (
-    <div className="flex items-start justify-center py-12 px-4 sm:px-6 lg:px-8  w-full relative z-10  top-0 left-0 bg-gray-900 h-screen ">
+    <div
+      onKeyUp={submitOnEnter}
+      className="flex items-start justify-center py-12 px-4 sm:px-6 lg:px-8  w-full relative z-10  top-0 left-0 bg-gray-900 h-scree min-h-screen "
+    >
       <Toast visible={visibility} message={message} success={success} />
 
       <div className="shadow-black shadow-sm pt-8 pb-4 text-white w-full  flex items-center justify-between supersm:px-6 px-4 right-0 z-50 absolute -top-4 ">
@@ -381,10 +380,12 @@ export const Form = () => {
               <FormInput
                 onChange={onChangeHandler}
                 name="sets"
-                type="text"
+                type="number"
                 required
                 placeholder="Sets"
                 value={sets}
+                min="0"
+                max="12"
               >
                 Sets
               </FormInput>
@@ -393,9 +394,11 @@ export const Form = () => {
               <FormInput
                 onChange={onChangeHandler}
                 name="reps"
-                type="text"
+                type="number"
                 placeholder="Reps"
                 value={reps}
+                min="0"
+                max="60"
               >
                 Reps
               </FormInput>
@@ -404,10 +407,12 @@ export const Form = () => {
               <FormInput
                 onChange={onChangeHandler}
                 name="restBetweenSets"
-                type="text"
+                type="number"
                 required
                 placeholder="Rest Between Sets"
                 value={restBetweenSets}
+                min="0"
+                max="10"
               >
                 Rest Between Sets
               </FormInput>
@@ -416,9 +421,11 @@ export const Form = () => {
               <FormInput
                 onChange={onChangeHandler}
                 name="restAfterSetComplete"
-                type="text"
+                type="number"
                 placeholder="Rest After Set Complete"
                 value={restAfterSetComplete}
+                min="0"
+                max="10"
               >
                 Rest After Set Complete
               </FormInput>

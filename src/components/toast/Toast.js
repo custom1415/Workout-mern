@@ -1,14 +1,19 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { setToasterVisibility } from "../../redux/workout/workout";
 
 export default function Toast({ visible, message, success }) {
+  const dispatch = useDispatch();
+  const removeToast = () => dispatch(setToasterVisibility());
   return (
     <div
       id="toast-success"
+      onClick={removeToast}
       className={`${
         visible
           ? "translate-y-0 opacity-100 z-[60]"
           : "-translate-y-2 opacity-0 z-0"
-      } transition-all   flex items-center w-full md:max-w-xs p-4 mb-4 text-gray-500 bg-white md:rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 absolute  md:right-4 md:top-4 top-0`}
+      } transition-all   flex items-center w-full md:max-w-sm p-4 mb-4 text-gray-500 bg-white md:rounded-lg shadow  absolute  md:right-4 md:top-4 top-0`}
       role="alert"
     >
       {success ? (
