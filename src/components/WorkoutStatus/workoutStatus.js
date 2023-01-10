@@ -66,7 +66,7 @@ export const WorkoutStatus = ({ shouldReset }) => {
     if (restsCompleted >= 1 || workoutsCompleted>=1) {
       timeout = setTimeout(() => {
         dispatch(setRestBtnVisibility(true));
-      }, 30000);
+      }, 30);
     }
     return ()=> clearTimeout(timeout)
   }, [restsCompleted]);
