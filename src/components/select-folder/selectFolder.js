@@ -37,16 +37,16 @@ export const SelectFolder = ({ getFolderHandler }) => {
 
       <div className="absolute z-20 w-full bg-white rounded divide-y shadow ">
         {dropdownVisibility && (
-          <ul className=" text-sm text-gray-700 relative">
+          <ul className=" text-sm text-gray-700">
             {FolderList
               ? FolderList.map((folderName) => (
                   <Fragment key={folderName.mainFolder}>
-                    <Folder >
+                    <Folder>
                       <span className="px-4 inline-block py-2 max-w-[198px] overflow-hidden text-ellipsis whitespace-nowrap">
                         {folderName.mainFolder}
                       </span>
 
-                      <div className=" text-sm bg-gray-800 absolute  lg:top-0 lg:right-[-100%] right-[0%]  lg:w-full w-1/2 h-max opacity-0 translate-y-[-3px]  group-hover:opacity-100  group-hover:translate-y-0   transition ease-linear duration-300 invisible group-hover:visible">
+                      <div className=" text-sm bg-gray-800 absolute z-50 lg:top-0 lg:right-[-100%] right-[0%]  lg:w-full w-1/2 h-max opacity-0 translate-y-[-3px]  group-hover:opacity-100  group-hover:translate-y-0   transition ease-linear duration-300 invisible group-hover:visible">
                         {Object.values(folderName.subFolder).map((item, i) => {
                           return (
                             <div

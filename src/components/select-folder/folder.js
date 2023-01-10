@@ -3,7 +3,7 @@ export const Folder = ({ children, onClick }) => {
     <>
       <li
         onClick={onClick}
-        className={`block group hover:rounded w-full hover:bg-gray-100  border-b-2 last-of-type:border-b-0`}
+        className={`block group hover:rounded w-full  hover:bg-gray-100 relative border-b-2 last-of-type:border-b-0`}
       >
         {children}
       </li>

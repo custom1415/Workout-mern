@@ -1,21 +1,26 @@
 import { TimerComponent } from "../../components/Timer/Timer";
 import { WorkoutStatus } from "../../components/WorkoutStatus/workoutStatus";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { WorkoutFooter } from "../../components/workoutFooter/workoutFooter";
 export const WorkoutPage = () => {
-  const [Time, setTime] = useState(0);
+  const [shouldReset, setShouldReset] = useState(false);
+  useEffect(() => {
+    if (shouldReset) {
+      setShouldReset(false);
+    }
+  }, [shouldReset]);
 
-  const getTime = (time) => {
-    console.log("called");
-    setTime(time);
+  const resetWorkout = () => {
+    setShouldReset(true);
+    return shouldReset;
   };
   return (
     <section className="midsm:px-6 bg-gray-900 overflow-hidden h-screen ">
       {/* <Button isFloatingBtn>
         <MdAdd />
       </Button> */}
-      <TimerComponent getTime={getTime} />
-      <WorkoutStatus time={Time} />
+      <TimerComponent reset={resetWorkout} />
+      <WorkoutStatus  shouldReset={shouldReset} />
 
       <div className="lg:hidden">
         <WorkoutFooter />

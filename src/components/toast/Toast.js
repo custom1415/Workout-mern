@@ -1,10 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setToasterVisibility } from "../../redux/workout/workout";
 
 export default function Toast({ visible, message, success }) {
   const dispatch = useDispatch();
   const removeToast = () => dispatch(setToasterVisibility());
+  const closeToast = () => {
+    setTimeout(() => {
+      dispatch(setToasterVisibility());
+    }, 2000);
+  };
+
+  useEffect(() => {
+    if (visible) {
+      closeToast();
+    }
+  }, [visible]);
   return (
     <div
       id="toast-success"

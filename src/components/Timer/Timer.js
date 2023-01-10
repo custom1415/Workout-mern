@@ -1,10 +1,15 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { activateResetStatus, resetRest } from "../../redux/workout/workout";
+import {
+  setRestBtnVisibility,
+  resetRest,
+  selectRestButtonVisibility,
+} from "../../redux/workout/workout";
 
 import { Button } from "../Button/button";
 
-export const TimerComponent = ({ getTime }) => {
+export const TimerComponent = ({ reset }) => {
   const [isActive, setIsActive] = useState(false);
   const [isPaused, setIsPaused] = useState(true);
   const [time, setTime] = useState(0);
@@ -13,7 +18,14 @@ export const TimerComponent = ({ getTime }) => {
   const dispatch = useDispatch();
   React.useEffect(() => {
     let interval = null;
+
+    let timeout;
+
     if (isActive && isPaused === false) {
+      timeout = setTimeout(() => {
+        dispatch(setRestBtnVisibility(true));
+      }, 30000);
+
       interval = setInterval(() => {
         setTime((time) => time + 10);
       }, 10);
@@ -22,15 +34,13 @@ export const TimerComponent = ({ getTime }) => {
     }
     return () => {
       clearInterval(interval);
+      clearTimeout(timeout);
     };
   }, [isActive, isPaused]);
-  React.useEffect(() => {
-    getTime(time);
-  }, [time]);
+
   const handleStart = () => {
     setIsActive(true);
     setIsPaused(false);
-    dispatch(activateResetStatus());
   };
 
   const handlePauseResume = () => {
@@ -40,7 +50,9 @@ export const TimerComponent = ({ getTime }) => {
   const handleReset = () => {
     setIsActive(false);
     setTime(0);
-    dispatch(resetRest());
+
+    reset();
+    dispatch(setRestBtnVisibility(false));
   };
 
   return (
@@ -70,17 +82,24 @@ export const TimerComponent = ({ getTime }) => {
         </span>
       </section>
       <section className="max-w-[80%]  mt-6 flex justify-center items-center lg:gap-10 supersm:gap-8 gap-4">
-        <Button
-          style={{ width: "33.3333%", display: "grid", placeContent: "center" }}
-          click={handleStart}
-        >
-          Start
-        </Button>
+        {!isActive && (
+          <Button
+            style={{
+              width: "33.3333%",
+              display: "grid",
+              placeContent: "center",
+            }}
+            click={handleStart}
+          >
+            Start
+          </Button>
+        )}
+
         <Button
           style={{ width: "33.3333%", display: "grid", placeContent: "center" }}
           click={handlePauseResume}
         >
-          Pause
+          {isPaused && isActive ? "Resume" : "Pause"}
         </Button>
         <Button
           style={{ width: "33.3333%", display: "grid", placeContent: "center" }}

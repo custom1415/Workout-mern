@@ -36,7 +36,7 @@ export const Button = ({
           : "px-8 py-3 rounded "
       } 
       ${isUpBtn && `bottom-8   z-30`} 
-      relative group/btn whitespace-nowrap  text-primary font-medium text-xs leading-tight uppercase shadow-md hover:bg-gray-900 hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg transition duration-150 ease-in-out`}
+      relative group/btn whitespace-nowrap  text-primary font-medium text-xs leading-tight uppercase shadow-md hover:bg-gray-900 hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg transition-all `}
       {...rest}
     >
       {children}

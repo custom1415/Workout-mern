@@ -34,9 +34,9 @@ export const selectRestCount = createSelector(
   [selectWorkout],
   (state) => state.restCount
 );
-export const selectResetStatus = createSelector(
+export const selectRestButtonVisibility = createSelector(
   [selectWorkout],
-  (state) => state.resetStatus
+  (state) => state.isRestButtonShown
 );
 const workoutSlice = createSlice({
   name: "workout",
@@ -55,7 +55,7 @@ const workoutSlice = createSlice({
     currentIndex: 1,
     workoutList: {},
     restCount: 0,
-    resetStatus: false,
+    isRestButtonShown: false,
     selectOptions: [
       {
         mainFolder: "Push/Pull/Legs Split",
@@ -94,19 +94,14 @@ const workoutSlice = createSlice({
   },
   reducers: {
     setCurrentDayWorkouts: (state, action) => {
-      return {
-        ...state,
-        currentDayWorkouts: action.payload,
-      };
+      state.currentDayWorkouts = action.payload;
     },
     setWorkoutToBeDone: (state, action) => {
       const { day, list } = action.payload;
-      return {
-        ...state,
-        workoutToBeDone: {
-          day,
-          list,
-        },
+
+      state.workoutToBeDone = {
+        day,
+        list,
       };
     },
     addFolderHandler: (state, action) => {
@@ -129,16 +124,14 @@ const workoutSlice = createSlice({
 
       // If main folderParam doesn't exist, add it to addedFolder
       if (!mainFolderExists) {
-        return {
-          ...state,
-          selectOptions: [
-            ...state.selectOptions,
-            {
-              mainFolder: folderParam.mainFolder,
-              subFolder,
-            },
-          ],
-        };
+        state.selectOptions = [
+          ...state.selectOptions,
+          {
+            mainFolder: folderParam.mainFolder,
+            subFolder,
+          },
+        ];
+        return;
       } else {
         const updatedFolders = [...state.selectOptions];
 
@@ -149,15 +142,13 @@ const workoutSlice = createSlice({
             ...subFolder,
           },
         };
-        return {
-          ...state,
-          selectOptions: updatedFolders,
-        };
+
+        state.selectOptions = updatedFolders;
       }
     },
 
     addWorkout: (state, action) => {
-      const { mainFolder, subFolder, workout } = action.payload;
+      const { mainFolder, subFolder, workout, id } = action.payload;
 
       const mainFolderWorkouts = state.workoutList[mainFolder] || {};
       const subFolderWorkouts = mainFolderWorkouts[subFolder] || [];
@@ -166,68 +157,69 @@ const workoutSlice = createSlice({
         (w) => w.exerciseName === workout.exerciseName
       );
       if (workoutExists) {
-        return {
-          ...state,
-          toaster: {
-            message: "Workout Exists",
-            visibility: true,
-            success: false,
-          },
+        state.toaster = {
+          message: "Workout Exists",
+          visibility: true,
+          success: false,
         };
+        return;
       }
 
-      return {
-        ...state,
-        toaster: {
-          message: "Workout added",
-          visibility: true,
-          success: true,
+      state.toaster = {
+        message: "Workout added",
+        visibility: true,
+        success: true,
+      };
+      state.workoutList = {
+        ...state.workoutList,
+        [mainFolder]: {
+          ...mainFolderWorkouts,
+
+          [subFolder]: [...subFolderWorkouts, { ...workout, id }],
         },
-        workoutList: {
-          ...state.workoutList,
-          [mainFolder]: {
-            ...mainFolderWorkouts,
-            [subFolder]: [...subFolderWorkouts, workout],
-          },
+      };
+    },
+
+    removeWorkout: (state, action) => {
+      const { mainFolder, subFolder, exerciseName } = action.payload;
+      const mainFolderWorkouts = state.workoutList[mainFolder] || {};
+      const subFolderWorkouts = mainFolderWorkouts[subFolder] || [];
+
+      state.workoutList = {
+        ...state.workoutList,
+        [mainFolder]: {
+          ...mainFolderWorkouts,
+          [subFolder]: subFolderWorkouts.filter(
+            (w) => w.exerciseName !== exerciseName
+          ),
         },
+      };
+      state.toaster = {
+        message: "Workout Removed",
+        visibility: true,
+        success: false,
       };
     },
     resetRest: (state, action) => {
-      return {
-        ...state,
-        restCount: 0,
-        resetStatus: true,
-      };
+      state.restCount = 0;
     },
-    activateResetStatus: (state, action) => {
-      return {
-        ...state,
-        resetStatus: false,
-      };
+    setRestBtnVisibility: (state, action) => {
+      state.isRestButtonShown = action.payload;
     },
     setRestCount: (state, action) => {
-      return {
-        ...state,
-        restCount: action.payload,
-      };
+      state.restCount = action.payload;
     },
     setToasterVisibility: (state, action) => {
-      return {
-        ...state,
-        toaster: {
-          ...state.toaster,
-          visibility: false,
-        },
+      state.toaster = {
+        ...state.toaster,
+        visibility: false,
       };
     },
     activateToaster: (state, action) => {
-      return {
-        ...state,
-        toaster: {
-          message: action.payload,
-          success: false,
-          visibility: true,
-        },
+      state.toaster = {
+        message: action.payload,
+        success: false,
+        visibility: true,
       };
     },
     toggleWorkoutListVisibility: (state, action) => {
@@ -235,15 +227,9 @@ const workoutSlice = createSlice({
     },
     handleCarouselNavigation: (state, action) => {
       if (action.payload.direction === "prev") {
-        return {
-          ...state,
-          currentIndex: (state.currentIndex - 1 + 3) % 3,
-        };
+        state.currentIndex = (state.currentIndex - 1 + 3) % 3;
       } else {
-        return {
-          ...state,
-          currentIndex: (state.currentIndex + 1) % 3,
-        };
+        state.currentIndex = (state.currentIndex + 1) % 3;
       }
     },
   },
@@ -258,8 +244,9 @@ export const {
   toggleWorkoutListVisibility,
   setToasterVisibility,
   resetRest,
-  activateResetStatus,
+  setRestBtnVisibility,
   activateToaster,
+  removeWorkout,
   setRestCount,
 } = workoutSlice.actions;
 export default workoutSlice.reducer;

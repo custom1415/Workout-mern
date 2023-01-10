@@ -1,93 +1,4 @@
-// import { useRef } from "react";
-// import { FaChevronLeft, FaChevronRight, FaChevronUp } from "react-icons/fa";
-// import { Button } from "../Button/button";
-// import { WorkoutCard } from "../WorkoutCard/workoutCard";
-
-// export const WorkoutStatus = () => {
-//   const currentWorkoutRef = useRef();
-//   const previousWorkoutRef = useRef();
-//   const nextWorkoutRef = useRef();
-//   const handleScroll = (e) => {
-//     if (e.target.dataset.name === "current") {
-//       currentWorkoutRef.current.scrollIntoView({ behavior: "smooth" });
-//     }
-//     if (e.target.dataset.name === "next") {
-//       nextWorkoutRef.current.scrollIntoView({ behavior: "smooth" });
-//     }
-//     if (e.target.dataset.name === "previous") {
-//       previousWorkoutRef.current.scrollIntoView({ behavior: "smooth" });
-//     }
-//   };
-
-//   return (
-//     <>
-//       <div className="lg:grid lg:grid-cols-3  lg:gap-5 gap-2 mt-6 h-[72vh] relative  ">
-//         <Button isCarouselBtn left>
-//           <FaChevronLeft />
-//         </Button>
-//         <Button isCarouselBtn right>
-//           <FaChevronRight />
-//         </Button>
-
-//         <div className="bg-black px-3 pb-6 lg:w-full w-1/2 overflow-y-scroll lg:relative absolute  lg:translate-x-0 translate-x-[-1000px] group">
-//           <h1
-//             className="text-gray-800   text-center mt-3 lg:text-3xl text-2xl group-hover:text-primary "
-//             ref={previousWorkoutRef}
-//           >
-//             Previous Workouts
-//           </h1>
-
-//           <WorkoutCard />
-//           <WorkoutCard />
-//           <WorkoutCard />
-//           <WorkoutCard />
-//           <WorkoutCard />
-//           <WorkoutCard />
-//           <WorkoutCard />
-
-//           <Button data-name="previous" isUpBtn right="12" click={handleScroll}>
-//             <FaChevronUp data-name="previous" />
-//           </Button>
-//         </div>
-//         <div className="bg-black lg:w-full w-1/2 px-3 pb-6  overflow-y-scroll lg:static absolute left-[50%] lg:translate-x-0 translate-x-[-50%] group">
-//           <h1
-//             className="text-gray-800 group-hover:text-primary  text-center mt-3 text-3xl"
-//             ref={currentWorkoutRef}
-//           >
-//             Current Workout
-//           </h1>
-//           <WorkoutCard />
-//           <WorkoutCard />
-
-//           <Button isUpBtn data-name="current" click={handleScroll}>
-//             <FaChevronUp data-name="current" />
-//           </Button>
-//         </div>
-//         <div className="bg-black lg:w-full w-1/2 px-3 pb-6 lg:translate-x-0 translate-x-[-1000px] overflow-y-scroll lg:relative absolute group">
-//           <h1
-//             className="text-gray-800   text-center mt-3 text-3xl group-hover:text-primary "
-//             ref={nextWorkoutRef}
-//           >
-//             Next Workouts
-//           </h1>
-//           <WorkoutCard />
-//           <WorkoutCard />
-//           <WorkoutCard />
-//           <WorkoutCard />
-//           <WorkoutCard />
-//           <WorkoutCard />
-
-//           <Button data-name="next" isUpBtn right="12" click={handleScroll}>
-//             <FaChevronUp data-name="next" />
-//           </Button>
-//         </div>
-//       </div>
-//     </>
-//   );
-// };
-
-import { memo, useEffect, useRef, useState } from "react";
-import { FaChevronLeft, FaChevronRight, FaChevronUp } from "react-icons/fa";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import {
@@ -95,15 +6,13 @@ import {
   selectCurrentDayWorkouts,
   selectCurrentIndex,
   selectRestCount,
+  setRestBtnVisibility,
 } from "../../redux/workout/workout";
 import { Button } from "../Button/button";
 import RestTimer from "../rest-timer/restTimer";
 import { WorkoutCard } from "../WorkoutCard/workoutCard";
 import { WorkoutFooter } from "../workoutFooter/workoutFooter";
-export const WorkoutStatus = ({ time, restStatus }) => {
-  console.log(time);
-
-  const [progress, setProgress] = useState(0);
+export const WorkoutStatus = ({ shouldReset }) => {
   const [shouldCarousel, setShouldCarousel] = useState(false);
   // const [restsCompleted, setRestsCompleted] = useState(0);
 
@@ -120,49 +29,25 @@ export const WorkoutStatus = ({ time, restStatus }) => {
   const [previousWorkouts, setPreviousWorkouts] = useState([]);
 
   const restsCompleted = useSelector(selectRestCount);
+  const percent = (previousWorkouts.length / currentDayWorkouts.length) * 100;
+  const [progress, setProgress] = useState(
+    currentDayWorkouts.length && percent
+  );
   const dispatch = useDispatch();
-  // const getRestCount = (val) => {
-  //   setRestsCompleted(val);
-  // };
-  // useEffect(() => {
-  //   console.log(currentWorkout, nextWorkouts, previousWorkouts);
-  //   // let interval;
-  //   // if (currentWorkout.length >= 1) {
-  //   //   setPreviousWorkouts((previous) => [currentWorkout[0], ...previous]);
-
-  //   //   setCurrentWorkout([nextWorkouts[0] || null]);
-  //   //   if (nextWorkouts.length) {
-  //   //     setNextWorkouts(nextWorkouts.splice(1));
-  //   //   }
-  //   // }
-
-  //   // return () => clearInterval(interval);
-  // }, [nextWorkouts]);
   useEffect(() => {
-    console.log("hi");
-    // if (!time) {
-    //   setCurrentWorkout([currentDayWorkouts[0] || null]);
-
-    //   setNextWorkouts([...currentDayWorkouts.slice(1)]);
-    //   setPreviousWorkouts([]);
-    //   setProgress(0);
-    // }
+    // setProgress(percent.toFixed());
     if (currentWorkout.filter(Boolean).length) {
       const { restBetweenSets, sets, restAfterSetComplete } = currentWorkout[0];
 
-      const percent =
-        (previousWorkouts.length / currentDayWorkouts.length) * 100;
-      setProgress(percent.toFixed());
-      console.log(restsCompleted, Number(sets));
       if (restsCompleted === Number(sets)) {
-        console.log("kk");
         // console.log(currentWorkout[0]);
-        setProgress(0);
+        // setProgress(0);
         setWorkoutsCompleted(currentDayWorkouts.length - nextWorkouts.length);
         setWorkoutsLeft(nextWorkouts.length);
 
         if (currentWorkout.length >= 1) {
           setPreviousWorkouts((previous) => [currentWorkout[0], ...previous]);
+          dispatch(setRestBtnVisibility(true));
 
           setCurrentWorkout([nextWorkouts[0] || null]);
           // setRestsCompleted(0);
@@ -174,22 +59,21 @@ export const WorkoutStatus = ({ time, restStatus }) => {
         }
       }
     }
-  }, [time, restsCompleted]);
-  // console.log(currentDayWorkouts);
-  const currentWorkoutRef = useRef();
-  const previousWorkoutRef = useRef();
-  const nextWorkoutRef = useRef();
-  const handleScroll = (e) => {
-    if (e.target.dataset.name === "current") {
-      currentWorkoutRef.current.scrollIntoView({ behavior: "smooth" });
+  }, [restsCompleted]);
+
+  useEffect(() => {
+    let timeout = null;
+    if (restsCompleted >= 1 || workoutsCompleted>=1) {
+      timeout = setTimeout(() => {
+        dispatch(setRestBtnVisibility(true));
+      }, 30000);
     }
-    if (e.target.dataset.name === "next") {
-      nextWorkoutRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-    if (e.target.dataset.name === "previous") {
-      previousWorkoutRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+    return ()=> clearTimeout(timeout)
+  }, [restsCompleted]);
+
+  useEffect(() => {
+    setProgress(percent);
+  }, [workoutsCompleted]);
 
   const currentIndex = useSelector(selectCurrentIndex);
 
@@ -204,6 +88,15 @@ export const WorkoutStatus = ({ time, restStatus }) => {
     Check();
   }, []);
 
+  useEffect(() => {
+    if (shouldReset) {
+      setCurrentWorkout([currentDayWorkouts[0] || null]);
+
+      setNextWorkouts([...currentDayWorkouts.slice(1)]);
+      setPreviousWorkouts([]);
+      setProgress(0);
+    }
+  }, [shouldReset]);
   window.addEventListener("resize", Check);
   return (
     <>
@@ -220,10 +113,7 @@ export const WorkoutStatus = ({ time, restStatus }) => {
           }  
           group transition ease-linear duration-300 `}
         >
-          <h1
-            className="text-gray-800   text-center mt-3 text-3xl group-hover:text-primary "
-            ref={previousWorkoutRef}
-          >
+          <h1 className="text-gray-800   text-center mt-3 text-3xl group-hover:text-primary ">
             Previous Workouts
           </h1>
           {previousWorkouts.filter(Boolean).length
@@ -247,15 +137,6 @@ export const WorkoutStatus = ({ time, restStatus }) => {
                 );
               })
             : null}
-
-          {/* <Button
-            data-name="previous"
-            isUpBtn="true"
-            right="12"
-            click={handleScroll}
-          >
-            <FaChevronUp data-name="previous" />
-          </Button> */}
         </div>
         <div
           className={`bg-[#09061b] lg:w-full md:w-1/2 h-full midsm:w-4/5 w-full px-3 pb-6  overflow-y-scroll lg:static absolute  lg:translate-x-0 translate-x-[-50%] left-[50%] 
@@ -271,10 +152,7 @@ export const WorkoutStatus = ({ time, restStatus }) => {
           
           group transition ease-linear duration-300`}
         >
-          <h1
-            className="text-primary group-hover:text-primary  text-center mt-3 text-3xl "
-            ref={currentWorkoutRef}
-          >
+          <h1 className="text-primary group-hover:text-primary  text-center mt-3 text-3xl ">
             Current Workout
           </h1>
           {currentWorkout.filter(Boolean).length ? (
@@ -304,10 +182,14 @@ export const WorkoutStatus = ({ time, restStatus }) => {
             Workouts completed : {workoutsCompleted}
           </p>
           <p className="text-gray-500 mt-3  ">Workouts left : {workoutsLeft}</p>
+          <p className="text-gray-500 mt-3">
+            Current Set : {restsCompleted + 1}
+          </p>
+          <p className="text-gray-500 mt-3  ">Rests Taken : {restsCompleted}</p>
 
           <RestTimer
             currentDayWorkouts={currentDayWorkouts}
-            // getRestCount={getRestCount}
+            shouldReset={shouldReset}
             currentWorkout={currentWorkout.filter(Boolean).length}
             duration={
               currentWorkout.filter(Boolean).length
@@ -323,7 +205,7 @@ export const WorkoutStatus = ({ time, restStatus }) => {
             }
           />
 
-          <div className="w-full group/progress bg-gray-600 h-3 relative mt-9">
+          <div className="w-full group/progress bg-gray-600 h-3 relative mt-4">
             <div
               className="bg-primary h-3  transition-all duration-300"
               style={{ width: `${progress}%` }}
@@ -333,8 +215,10 @@ export const WorkoutStatus = ({ time, restStatus }) => {
                   previousWorkouts.length ? "block" : "hidden"
                 }   top-3 relative bg-gray-600 left-0 px-3 py-2 text-white`}
               >
-                {(previousWorkouts.length / currentDayWorkouts.length) * 100 +
-                  "% complete"}
+                {(
+                  (previousWorkouts.length / currentDayWorkouts.length) *
+                  100
+                ).toFixed() + "% complete"}
               </div>
             </div>
           </div>
@@ -351,10 +235,7 @@ export const WorkoutStatus = ({ time, restStatus }) => {
           }  
           group transition ease-linear duration-300`}
         >
-          <h1
-            className="text-gray-800   text-center mt-3 text-3xl group-hover:text-primary "
-            ref={nextWorkoutRef}
-          >
+          <h1 className="text-gray-800   text-center mt-3 text-3xl group-hover:text-primary ">
             Next Workouts
           </h1>
           {nextWorkouts.length
@@ -378,16 +259,6 @@ export const WorkoutStatus = ({ time, restStatus }) => {
                 );
               })
             : null}
-
-          {/* <Button
-            data-name="next"
-            isUpBtn
-            right="12"
-            click={handleScroll}
-            style={{ position: "sticky" }}
-          >
-            <FaChevronUp data-name="next" />
-          </Button> */}
         </div>
       </div>
     </>
