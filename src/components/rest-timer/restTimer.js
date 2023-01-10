@@ -74,7 +74,6 @@ const RestTimer = ({
     }
   }, [restCount, isRunning]);
 
-
   // useEffect(() => {
   //   if (!isRestButtonShown) {
   //     setMinutes(restBetweenSets);
@@ -103,7 +102,7 @@ const RestTimer = ({
           console.log(isRunning);
           clearInterval(interval);
         }
-      }, 10);
+      }, 1000);
     } else if (!isRunning && minutes !== restBetweenSets) {
       clearInterval(interval);
     }
