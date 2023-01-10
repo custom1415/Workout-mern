@@ -24,7 +24,7 @@ export const TimerComponent = ({ reset }) => {
     if (isActive && isPaused === false) {
       timeout = setTimeout(() => {
         dispatch(setRestBtnVisibility(true));
-      }, 30000);
+      }, 30);
 
       interval = setInterval(() => {
         setTime((time) => time + 10);
