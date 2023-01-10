@@ -22,13 +22,13 @@ export default function Toast({ visible, message, success }) {
       onClick={removeToast}
       className={`${
         visible
-          ? "translate-y-0 opacity-100 z-[60]"
+          ? "translate-y-0 opacity-100 z-[1000]"
           : "-translate-y-2 opacity-0 z-0"
       } transition-all   flex items-center w-full md:max-w-sm p-4 mb-4 text-gray-500 bg-white md:rounded-lg shadow  absolute  md:right-4 md:top-4 top-0`}
       role="alert"
     >
       {success ? (
-        <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
+        <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg  dark:text-green-200">
           <svg
             aria-hidden="true"
             className="w-5 h-5"
@@ -45,7 +45,7 @@ export default function Toast({ visible, message, success }) {
           <span className="sr-only">Check icon</span>
         </div>
       ) : (
-        <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-orange-500 bg-orange-100 rounded-lg dark:bg-orange-700 dark:text-orange-200">
+        <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-orange-500 bg-orange-100 rounded-lg ">
           <svg
             aria-hidden="true"
             className="w-5 h-5"

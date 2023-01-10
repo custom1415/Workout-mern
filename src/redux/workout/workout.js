@@ -1,4 +1,5 @@
-import { createSelector, createSlice } from "@reduxjs/toolkit";
+import { createSelector, createSlice, original } from "@reduxjs/toolkit";
+import { m } from "framer-motion";
 
 const selectWorkout = (state) => state.workout;
 export const selectCurrentIndex = createSelector(
@@ -149,6 +150,7 @@ const workoutSlice = createSlice({
 
     addWorkout: (state, action) => {
       const { mainFolder, subFolder, workout, id } = action.payload;
+      console.log(id);
 
       const mainFolderWorkouts = state.workoutList[mainFolder] || {};
       const subFolderWorkouts = mainFolderWorkouts[subFolder] || [];
@@ -180,6 +182,28 @@ const workoutSlice = createSlice({
       };
     },
 
+    // removeWorkout: (state, action) => {
+    //   const { mainFolder, subFolder, exerciseName } = action.payload;
+    //   const mainFolderWorkouts = state.workoutList[mainFolder] || {};
+    //   const subFolderWorkouts = mainFolderWorkouts[subFolder] || [];
+
+    //   state.workoutList = {
+    //     ...state.workoutList,
+    //     [mainFolder]: {
+    //       ...mainFolderWorkouts,
+    //       [subFolder]: subFolderWorkouts.filter(
+    //         (w) => w.exerciseName !== exerciseName
+    //       ),
+    //     },
+    //   };
+    //   state.toaster = {
+    //     message: "Workout Removed",
+    //     visibility: true,
+    //     success: false,
+    //   };
+
+    // },
+
     removeWorkout: (state, action) => {
       const { mainFolder, subFolder, exerciseName } = action.payload;
       const mainFolderWorkouts = state.workoutList[mainFolder] || {};
@@ -194,11 +218,27 @@ const workoutSlice = createSlice({
           ),
         },
       };
-      state.toaster = {
-        message: "Workout Removed",
-        visibility: true,
-        success: false,
-      };
+
+      // Check if subFolder array is empty, and if so, delete it from mainFolder
+      if (state.workoutList[mainFolder][subFolder].length === 0) {
+        state.toaster = {
+          message: "Folder deleted",
+          visibility: true,
+          success: false,
+        };
+        delete state.workoutList[mainFolder][subFolder];
+      }
+
+      // Check if mainFolder object is now empty, and if so, delete it from workoutList
+      if (Object.keys(state.workoutList[mainFolder]).length === 0) {
+        delete state.workoutList[mainFolder];
+
+        state.toaster = {
+          message: "Folder deleted",
+          visibility: true,
+          success: false,
+        };
+      }
     },
     resetRest: (state, action) => {
       state.restCount = 0;

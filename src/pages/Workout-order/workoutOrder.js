@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { FaChevronLeft, FaHome } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Button } from "../../components/Button/button";
 import {
   selectWorkoutToBeDone,
   setCurrentDayWorkouts,
@@ -37,9 +39,11 @@ export const WorkoutOrder = () => {
     });
   };
   const dispatch = useDispatch();
-  const handleClick = () => {
-    dispatch(setCurrentDayWorkouts(list));
-    navigate("/workout");
+  const handleClick = (e) => {
+    if (e.target.dataset.location === "/workout") {
+      dispatch(setCurrentDayWorkouts(list));
+    }
+    navigate(e.target.dataset.location);
   };
   return (
     <div
@@ -54,7 +58,7 @@ export const WorkoutOrder = () => {
         <div className="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-[#0b0220] bg-clip-padding rounded-md outline-none text-current">
           <div className="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md">
             <h5
-              className="md:text-xl supersm:text-md text-sm font-medium leading-normal text-primary"
+              className="text-xl  font-medium leading-normal text-primary"
               id="workout"
             >
               <span className="text-gray-600 whitespace-nowrap">
@@ -62,15 +66,42 @@ export const WorkoutOrder = () => {
               </span>
               {day || ""}
             </h5>
-
             <button
-              className={`py-2 supersm:px-3 px-2 lg:text-xl  md:text-md text-sm whitespace-nowrap  rounded-sm cursor-pointer text-gray-900  bg-primary hover:scale-[1.05] transition-all ${
+              data-location="/workout"
+              className={`py-2 supersm:px-3 px-2 lg:text-xl  md:text-md text-sm whitespace-nowrap  rounded-sm cursor-pointer text-gray-900  bg-primary hover:scale-[1.05] transition-all midsm:block hidden ${
                 isDisabled ? "hidden" : ""
               }`}
               onClick={handleClick}
             >
-              Start <span className="supersm:inline-block hidden">Workout</span>
+              Start{" "}
+              <span data-location="/workout" className="supersm:inline hidden">
+                &nbsp;Workout
+              </span>
             </button>
+
+            <div className="flex justify-between items-center fixed bottom-0 gap-4 w-screen left-0 p-2 midsm:hidden">
+              <Button data-location="/" click={handleClick}>
+                <FaHome />
+              </Button>
+              <button
+                data-location="/workout"
+                className={`py-2 supersm:px-3 flex-1 px-2 lg:text-xl  md:text-md text-sm whitespace-nowrap  rounded-sm cursor-pointer text-gray-900  bg-primary hover:scale-[1.05] transition-all ${
+                  isDisabled ? "hidden" : ""
+                }`}
+                onClick={handleClick}
+              >
+                Start
+                <span
+                  data-location="/workout"
+                  className="supersm:inline hidden"
+                >
+                  &nbsp;Workout
+                </span>
+              </button>
+              <Button click={handleClick} data-location="/workoutlist">
+                <FaChevronLeft />
+              </Button>
+            </div>
           </div>
           <div className="modal-body p-4  md:text-md text-sm">
             <DragDropContext onDragEnd={onDragEnd}>

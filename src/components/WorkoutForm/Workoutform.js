@@ -117,7 +117,7 @@ export const Form = () => {
     //   if (!folder[key]) return;
     // }
 
-    dispatch(addWorkout({ mainFolder, subFolder, workout: FormField,id:String(Date.now()).slice(-2)}));
+    dispatch(addWorkout({ mainFolder, subFolder, workout: FormField,id:String(Date.now()).slice(-5)}));
     resetFormFields();
   };
 

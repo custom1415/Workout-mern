@@ -31,30 +31,40 @@ export const WorkoutCard = ({
     );
   const [NoteVisibility, setNoteVisibility] = useState(false);
   const toggleNoteVisibility = () => {
-    if (note) {
-      setNoteVisibility(!NoteVisibility);
-      return;
-    }
+    setNoteVisibility(!NoteVisibility);
+    return;
   };
 
   return (
     <>
-      <div className=" w-full  border border-gray-500 mt-4 px-4 py-2 hover:border-primary relative bg-gray-900 overflow-hidden">
+      <div className=" w-full group  border border-gray-500 mt-4 px-4 py-2 hover:border-primary relative bg-gray-900 overflow-hidden">
         <div
-          className={`absolute z-50 top-0 left-0 w-full h-full text-white bg-gray-800 ${
-            NoteVisibility ? "block" : "hidden"
+          className={`absolute  top-0 left-0 w-full h-full text-white bg-gray-800  px-4
+          transition-all
+          ${
+            NoteVisibility
+              ? "translate-y-0 opacity-100 z-50"
+              : "translate-y-4 opacity-0 pointer-events-none"
           }`}
           onClick={toggleNoteVisibility}
         >
-          <span className="inline-block m-3 ">Note : </span>
-          <span>{note}</span>
+          {note ? <span className="inline-block m-3 mb-0 text-gray-600">Note : </span> : <></>}
+          <span>
+            {note || <h1 className="block m-3 text-center ">No Notes Set</h1>}
+          </span>
         </div>
         {location.pathname !== "/workout" && (
-          <div className="absolute top-4 right-4 gap-2 flex justify-between items-center text-white z-10">
-            <span className=" bg-blue-700 inline-block p-1 hover:bg-blue-800 ">
-              <FaStickyNote onClick={toggleNoteVisibility} />
+          <div
+            className={` absolute bottom-0 transition-all right-0 gap-2 h-12 pr-4 group-hover:opacity-100 justify-end  opacity-0 group-hover:translate-y-0 translate-y-4 w-full flex items-center bg-gray-900 text-white z-10`}
+          >
+            <span className=" bg-blue-700 inline-block p-1 hover:bg-blue-800 " onClick={toggleNoteVisibility}>
+              <FaStickyNote  />
             </span>
-            <span className=" bg-blue-700 inline-block p-1 hover:bg-blue-800 ">
+            <span
+              className=" bg-blue-700 inline-block p-1 hover:bg-blue-800 "
+              data-bs-toggle="modal"
+              data-bs-target="#edit-modal"
+            >
               <FaEdit />
             </span>
             <span
