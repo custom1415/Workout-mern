@@ -42,7 +42,6 @@ export const TimerFunctions = (reset) => {
   const handleReset = () => {
     setIsActive(false);
     setTime(0);
-
     reset();
     dispatch(setRestBtnVisibility(false));
   };

@@ -63,12 +63,12 @@ export const WorkoutStatus = ({ shouldReset }) => {
 
   useEffect(() => {
     let timeout = null;
-    if (restsCompleted >= 1 || workoutsCompleted>=1) {
+    if (restsCompleted >= 1 || workoutsCompleted >= 1) {
       timeout = setTimeout(() => {
         dispatch(setRestBtnVisibility(true));
       }, 30);
     }
-    return ()=> clearTimeout(timeout)
+    return () => clearTimeout(timeout);
   }, [restsCompleted]);
 
   useEffect(() => {
