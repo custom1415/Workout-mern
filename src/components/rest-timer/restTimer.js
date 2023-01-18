@@ -12,16 +12,16 @@ import {
 import { Button } from "../Button/button";
 
 const RestTimer = ({
-  duration,
+  currentExercise,
   shouldReset,
   currentDayWorkouts,
   currentWorkout,
 }) => {
   // console.log(currentWorkout, "length");
 
-  const { exerciseName } = duration[0];
+  const { exerciseName } = currentExercise[0];
 
-  const [Exercise, setExercise] = useState(duration[0]);
+  const [Exercise, setExercise] = useState(currentExercise[0]);
   const { restBetweenSets, restAfterSetComplete, sets } = Exercise;
   const [minutes, setMinutes] = useState(restBetweenSets);
   const [seconds, setSeconds] = useState(0);
@@ -43,7 +43,7 @@ const RestTimer = ({
 
   useEffect(() => {
     const w = currentDayWorkouts.find(
-      (workout) => workout.exerciseName === duration[0].exerciseName
+      (workout) => workout.exerciseName === currentExercise[0].exerciseName
     );
 
     if (w) {
@@ -73,8 +73,16 @@ const RestTimer = ({
       dispatch(setRestBtnVisibility(false));
     }
   }, [restCount, isRunning]);
-
-
+  useEffect(() => {
+    dispatch(setRestBtnVisibility(false));
+  }, []);
+  useEffect(() => {
+    console.log(restCount);
+    console.log(isRunning);
+    if (restCount >= 1 && !isRunning) {
+      dispatch(setRestBtnVisibility(false));
+    }
+  }, [restCount, isRunning]);
   // useEffect(() => {
   //   if (!isRestButtonShown) {
   //     setMinutes(restBetweenSets);
@@ -96,14 +104,12 @@ const RestTimer = ({
         } else if (Number(minutes) === 0 && Number(seconds) === 0) {
           // setrestCount((prev) => prev + 1);
           setIsRunning(!isRunning);
-          console.log("clleddd");
-
           dispatch(setRestCount(restCount + 1));
           setPreviousWorkout(Exercise.exerciseName);
           console.log(isRunning);
           clearInterval(interval);
         }
-      }, 10);
+      }, 1000);
     } else if (!isRunning && minutes !== restBetweenSets) {
       clearInterval(interval);
     }
@@ -116,19 +122,15 @@ const RestTimer = ({
     setIsRunning(true);
   }
 
-  function handleStop() {
-    setIsRunning(false);
-  }
-
   //   function handleReset() {
-  //     setMinutes(duration);
+  //     setMinutes(currentExercise);
   //     setSeconds(0);
   //   }
 
   return (
     <>
       {currentWorkout ? (
-        <div className="w-full text-white p-6 left-0 absolute lg:bottom-0 bottom-12 flex justify-between items-center max-h-20">
+        <div className="w-full px-6 text-white left-0 fixed lg:bottom-0 bottom-12 flex justify-between items-center max-h-20">
           <div
             className={`${
               isRunning || !isRestButtonShown
@@ -144,7 +146,7 @@ const RestTimer = ({
             </div>
           )}
           {!isRunning && isRestButtonShown && (
-            <Button click={handleStart}>Rest</Button>
+            <Button onClick={handleStart}>Rest</Button>
           )}
           {/* {isRunning && <button onClick={handleStop}>Stop</button>}
       <button onClick={handleReset}>Reset</button> */}

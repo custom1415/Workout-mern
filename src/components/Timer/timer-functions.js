@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+
 import { setRestBtnVisibility } from "../../redux/workout/workout";
 export const TimerFunctions = (reset) => {
   const [isActive, setIsActive] = useState(false);
@@ -8,15 +8,14 @@ export const TimerFunctions = (reset) => {
   const [time, setTime] = useState(0);
 
   const dispatch = useDispatch();
+  const toggleRestBtn = (bool) => dispatch(setRestBtnVisibility(true));
   useEffect(() => {
     let interval = null;
 
     let timeout;
 
     if (isActive && isPaused === false) {
-      timeout = setTimeout(() => {
-        dispatch(setRestBtnVisibility(true));
-      }, 30);
+      timeout = setTimeout(() => toggleRestBtn(true), 30000);
 
       interval = setInterval(() => {
         setTime((time) => time + 10);

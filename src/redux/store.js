@@ -1,33 +1,30 @@
-import {  configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import logger from "redux-logger";
-// import storage from "redux-persist/lib/storage";
+import persistReducer from "redux-persist/es/persistReducer";
+import persistStore from "redux-persist/es/persistStore";
+import storage from "redux-persist/lib/storage";
 import workout from "./workout/workout";
 
-// const persistConfig = {
-//   key: "root",
-//   storage,
-// };
+const persistConfig = {
+  key: "root",
+  storage,
+};
 
-// const rootReducer = combineReducers({
-//   menu: MenuReducer,
-//   cart: cartToolkit,
-//   sidebar: sidebarToolkit,
-// });
-// const persistedReducer = persistReducer(persistConfig, rootReducer);
+const rootReducer = combineReducers({
+  workout: workout,
+});
 
 const middlewares = [];
 
-if (process.env.NODE_ENV === "development") {
-  middlewares.push(logger);
-}
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
-  reducer: {
-    workout: workout,
-  },
+  reducer: persistedReducer,
   middleware: middlewares,
 });
 
 export default store;
+
+export const persistor = persistStore(store);
 
 // export const persistor = persistStore(store);

@@ -8,29 +8,16 @@ export default function TimerControls({
   isPaused,
 }) {
   return (
-    <section className="max-w-[80%]  mt-6 flex justify-center items-center lg:gap-10 supersm:gap-8 gap-4">
-      {!isActive && (
-        <Button
-          style={{
-            width: "33.3333%",
-            display: "grid",
-            placeContent: "center",
-          }}
-          click={handleStart}
-        >
-          Start
-        </Button>
-      )}
+    <section className="max-w-[80%]  midsm:mt-6 mt-2 flex justify-center items-center  lg:gap-10 supersm:gap-8 gap-4">
+      {!isActive && <Button onClick={handleStart}>Start</Button>}
 
-      <Button
-        style={{ width: "33.3333%", display: "grid", placeContent: "center" }}
-        click={handlePauseResume}
-      >
+      <Button onClick={handlePauseResume}>
         {isPaused && isActive ? "Resume" : "Pause"}
       </Button>
+
       <Button
-        style={{ width: "33.3333%", display: "grid", placeContent: "center" }}
-        click={handleReset}
+        className="btn-primary w-1/3 grid place-content-center "
+        onClick={handleReset}
       >
         Reset
       </Button>
