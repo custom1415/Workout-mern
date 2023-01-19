@@ -170,7 +170,6 @@ const workoutSlice = createSlice({
       });
       let mainFolderExists = false;
       let mainFolderIndex;
-      console.log(folderParam);
 
       // Check if main folderParam already exists in addedFolder
       state.selectOptions.forEach((f, index) => {
@@ -207,7 +206,6 @@ const workoutSlice = createSlice({
 
     addWorkout: (state, action) => {
       const { mainFolder, subFolder, workout, id } = action.payload;
-      console.log(id);
 
       const mainFolderWorkouts = state.workoutList[mainFolder] || {};
       const subFolderWorkouts = mainFolderWorkouts[subFolder] || [];

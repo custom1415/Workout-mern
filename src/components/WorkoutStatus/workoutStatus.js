@@ -46,7 +46,7 @@ export const WorkoutStatus = ({ shouldReset }) => {
       const { restBetweenSets, sets, restAfterSetComplete } = currentWorkout[0];
 
       if (restsCompleted === Number(sets)) {
-        // console.log(currentWorkout[0]);
+        //
         // setProgress(0);
         setWorkoutsCompleted(currentDayWorkouts.length - nextWorkouts.length);
         setWorkoutsLeft(nextWorkouts.length);
@@ -138,7 +138,11 @@ export const WorkoutStatus = ({ shouldReset }) => {
           <h1 className="text-primary group-hover:text-primary  text-center mt-3 text-3xl ">
             Current Workout
           </h1>
-          {currentWorkoutLength ? <CurrentWorkouts currentWorkout={currentWorkout} /> : <></>}
+          {currentWorkoutLength ? (
+            <CurrentWorkouts currentWorkout={currentWorkout} />
+          ) : (
+            <></>
+          )}
           <FooterCurrentWorkout
             restsCompleted={restsCompleted}
             workoutsCompleted={workoutsCompleted}

@@ -13,7 +13,7 @@ export const WorkoutCard = ({
   restBetweenSets,
   restAfterSetComplete,
   note,
-  id
+  id,
 }) => {
   const location = useLocation();
   const dispatch = useDispatch();
@@ -26,9 +26,7 @@ export const WorkoutCard = ({
     restBetweenSets,
     restAfterSetComplete,
     note,
-  
   };
-  
  
   console.log(singleFolder, singleSubFolder);
   const RemoveWorkout = () =>
@@ -58,36 +56,23 @@ export const WorkoutCard = ({
           <span>{note}</span>
         </div>
 
-        <div className="absolute top-4 right-4 gap-2 flex justify-between items-center text-white z-10">
-          <span className=" bg-blue-700 inline-block p-1 hover:bg-blue-800 ">
-            <FaStickyNote onClick={toggleNoteVisibility} />
-          </span>
-          <span className=" bg-blue-700 inline-block p-1 hover:bg-blue-800 ">
-            <FaEdit />
-          </span>
-          <span
-            className=" bg-red-600 inline-block p-1 hover:bg-red-700"
-            onClick={RemoveWorkout}
-          >
-            <FaTrashAlt />
-          </span>
-        </div>
-
-        <h1 className="text-white text-center text-2xl overflow-hidden ">
-          {exerciseName || "Push Pull"}
-        </h1>
-        <p className="bg-white pl-1 text-black my-1 lg:text-sm text-[12px]">
-          Sets : <span>{sets || "0"}</span>
-        </p>
-        <p className="bg-white pl-1 text-black my-1 lg:text-sm text-[12px]">
-          Reps : <span>{reps || "0"}</span>
-        </p>
-        <p className="bg-white pl-1 text-black my-1 lg:text-sm text-[12px]">
-          Rest Between Sets : <span>{restBetweenSets || "0"}</span> mins
-        </p>
-        <p className="bg-white pl-1 text-black my-1 lg:text-sm text-[12px]">
-          Rest After Set : <span>{restAfterSetComplete || "0"}</span> mins
-        </p>
+        <Details
+          exerciseName={exerciseName}
+          reps={reps}
+          restAfterSetComplete={restAfterSetComplete}
+          restBetweenSets={restBetweenSets}
+          sets={sets}
+        />
+        {location.pathname !== "/workout" && (
+          <CardButtons
+     
+            workout={workout}
+            singleFolder={singleFolder}
+            singleSubFolder={singleSubFolder}
+            RemoveWorkout={RemoveWorkout}
+            toggleNoteVisibility={toggleNoteVisibility}
+          />
+        )}
       </div>
     </>
   );

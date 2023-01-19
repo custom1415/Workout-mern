@@ -52,7 +52,7 @@ export const Form = () => {
   const onChangeHandler = (e) => {
     const { value, name } = e.target;
     setFormField({ ...FormField, [name]: value });
-    // console.log(FormField);
+    //
   };
   const resetFormFields = () => {
     setFormField(defaultFormFields);
@@ -60,7 +60,7 @@ export const Form = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(FormField);
+
     for (const key in FormField) {
       if (key !== "exerciseName" && key !== "note") {
         if (Number(FormField[key]) === 0) {

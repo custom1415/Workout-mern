@@ -17,7 +17,7 @@ const RestTimer = ({
   currentDayWorkouts,
   currentWorkout,
 }) => {
-  // console.log(currentWorkout, "length");
+  //
 
   const { exerciseName } = currentExercise[0];
 
@@ -67,14 +67,20 @@ const RestTimer = ({
     dispatch(setRestBtnVisibility(false));
   }, []);
   useEffect(() => {
+    if (restCount >= 1 && !isRunning) {
+      dispatch(setRestBtnVisibility(false));
+    }
+  }, [restCount, isRunning]);
+  useEffect(() => {
+    dispatch(setRestBtnVisibility(false));
+  }, []);
+  useEffect(() => {
     console.log(restCount);
     console.log(isRunning);
     if (restCount >= 1 && !isRunning) {
       dispatch(setRestBtnVisibility(false));
     }
   }, [restCount, isRunning]);
-
-
   // useEffect(() => {
   //   if (!isRestButtonShown) {
   //     setMinutes(restBetweenSets);
@@ -98,7 +104,7 @@ const RestTimer = ({
           setIsRunning(!isRunning);
           dispatch(setRestCount(restCount + 1));
           setPreviousWorkout(Exercise.exerciseName);
-          console.log(isRunning);
+
           clearInterval(interval);
         }
       }, 1000);
