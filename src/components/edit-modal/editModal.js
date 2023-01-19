@@ -38,16 +38,10 @@ export const EditModal = ({ oldWorkout }) => {
         key !== "singleSubFolder"
       ) {
         if (Number(FormField[key]) === 0) {
-          console.log(FormField[key]);
-          console.log("hi");
           dispatch(activateToaster("Please provide valid values"));
           return;
         }
         if (/[-eE.]/.test(FormField[key])) {
-          console.log(key);
-
-          console.log(FormField[key]);
-          console.log("hello");
           dispatch(activateToaster("Please provide valid values"));
           return;
         }

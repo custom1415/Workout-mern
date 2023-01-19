@@ -5,7 +5,7 @@ import { selectSelectOptions } from "../../redux/workout/workout";
 import { Folder } from "./folder";
 
 export const SelectFolder = ({ getFolderHandler }) => {
-  // console.log(FolderList);
+  //
   const FolderList = useSelector(selectSelectOptions);
   const [dropdownVisibility, setDropdownVisibility] = useState(false);
   const [folderToAddTo, setFolderToAddTo] = useState();

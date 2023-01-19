@@ -14,7 +14,7 @@ export const AddFolderModal = ({ addFolder }) => {
   const [FormField, setFormField] = useState(defaultFolderStructure);
   const { mainFolder } = FormField;
   useEffect(() => {
-    // console.log(FormField);
+    //
   }, [FormField]);
   const dispatch = useDispatch();
   const handleSubmit = (e) => {
@@ -22,13 +22,12 @@ export const AddFolderModal = ({ addFolder }) => {
       if (!FormField[key]) return;
     }
 
-    console.log(SubFolderValue);
     // subFolder.push(...Object.values(SubFolderValue));
 
     setFormField({
       ...FormField,
     });
-    console.log(FormField);
+
     // addFolder(FormField, SubFolderValue);
     dispatch(addFolderHandler({ folderParam: FormField, SubFolderValue }));
     setFormField(defaultFolderStructure);

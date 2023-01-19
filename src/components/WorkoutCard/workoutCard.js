@@ -15,7 +15,7 @@ export const WorkoutCard = ({
   restBetweenSets,
   restAfterSetComplete,
   note,
-  id
+  id,
 }) => {
   const location = useLocation();
   const dispatch = useDispatch();
@@ -28,10 +28,8 @@ export const WorkoutCard = ({
     restBetweenSets,
     restAfterSetComplete,
     note,
-  
   };
- 
-  console.log(singleFolder, singleSubFolder);
+
   const RemoveWorkout = () =>
     dispatch(
       removeWorkout({
@@ -64,7 +62,6 @@ export const WorkoutCard = ({
         />
         {location.pathname !== "/workout" && (
           <CardButtons
-     
             workout={workout}
             singleFolder={singleFolder}
             singleSubFolder={singleSubFolder}
