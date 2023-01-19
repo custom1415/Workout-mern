@@ -1,11 +1,5 @@
-// import { AiOutlineEdit, AiOutlineCloseCircle } from "react-icons/ai";
-// import { FaRegTrashAlt } from "react-icons/fa";
-// import { BiNote } from "react-icons/bi";
-
 import { useState } from "react";
-import { FaEdit, FaStickyNote, FaTrashAlt } from "react-icons/fa";
 import { useDispatch } from "react-redux";
-import { useLocation } from "react-router-dom";
 import { activateToaster, removeWorkout } from "../../redux/workout/workout";
 
 export const WorkoutCard = ({
@@ -17,9 +11,22 @@ export const WorkoutCard = ({
   restBetweenSets,
   restAfterSetComplete,
   note,
+  id
 }) => {
   const location = useLocation();
   const dispatch = useDispatch();
+  const workout = {
+    singleFolder,
+    singleSubFolder,
+    exerciseName,
+    sets,
+    reps,
+    restBetweenSets,
+    restAfterSetComplete,
+    note,
+  
+  };
+ 
   console.log(singleFolder, singleSubFolder);
   const RemoveWorkout = () =>
     dispatch(
@@ -31,10 +38,8 @@ export const WorkoutCard = ({
     );
   const [NoteVisibility, setNoteVisibility] = useState(false);
   const toggleNoteVisibility = () => {
-    if (note) {
-      setNoteVisibility(!NoteVisibility);
-      return;
-    }
+    setNoteVisibility(!NoteVisibility);
+    return;
   };
 
   return (
@@ -49,22 +54,22 @@ export const WorkoutCard = ({
           <span className="inline-block m-3 ">Note : </span>
           <span>{note}</span>
         </div>
-        {location.pathname !== "/workout" && (
-          <div className="absolute top-4 right-4 gap-2 flex justify-between items-center text-white z-10">
-            <span className=" bg-blue-700 inline-block p-1 hover:bg-blue-800 ">
-              <FaStickyNote onClick={toggleNoteVisibility} />
-            </span>
-            <span className=" bg-blue-700 inline-block p-1 hover:bg-blue-800 ">
-              <FaEdit />
-            </span>
-            <span
-              className=" bg-red-600 inline-block p-1 hover:bg-red-700"
-              onClick={RemoveWorkout}
-            >
-              <FaTrashAlt />
-            </span>
-          </div>
-        )}
+
+        <div className="absolute top-4 right-4 gap-2 flex justify-between items-center text-white z-10">
+          <span className=" bg-blue-700 inline-block p-1 hover:bg-blue-800 ">
+            <FaStickyNote onClick={toggleNoteVisibility} />
+          </span>
+          <span className=" bg-blue-700 inline-block p-1 hover:bg-blue-800 ">
+            <FaEdit />
+          </span>
+          <span
+            className=" bg-red-600 inline-block p-1 hover:bg-red-700"
+            onClick={RemoveWorkout}
+          >
+            <FaTrashAlt />
+          </span>
+        </div>
+
         <h1 className="text-white text-center text-2xl overflow-hidden ">
           {exerciseName || "Push Pull"}
         </h1>

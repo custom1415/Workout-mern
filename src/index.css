@@ -37,3 +37,8 @@ input::-webkit-inner-spin-button {
   margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
 }
 
+@layer components {
+  .btn-primary {
+    @apply relative whitespace-nowrap px-8 py-3 rounded z-30 bg-gray-800 text-primary font-medium text-xs leading-tight uppercase shadow-md hover:bg-gray-900 hover:shadow-lg focus:shadow-lg  active:bg-gray-900 active:shadow-lg transition-all;
+  }
+}

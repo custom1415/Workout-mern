@@ -1,4 +1,4 @@
-import { createSelector, createSlice } from "@reduxjs/toolkit";
+import { createSelector, createSlice, original } from "@reduxjs/toolkit";
 
 const selectWorkout = (state) => state.workout;
 export const selectCurrentIndex = createSelector(
@@ -38,9 +38,19 @@ export const selectRestButtonVisibility = createSelector(
   [selectWorkout],
   (state) => state.isRestButtonShown
 );
+export const selectEditValues = createSelector(
+  [selectWorkout],
+  (state) => state.editValues
+);
+export const selectisModalOpen = createSelector(
+  [selectWorkout],
+  (state) => state.isModalOpen
+);
 const workoutSlice = createSlice({
   name: "workout",
   initialState: {
+    isModalOpen: false,
+    editValues: {},
     currentDayWorkouts: [],
     workoutToBeDone: {
       day: "",
@@ -93,6 +103,54 @@ const workoutSlice = createSlice({
     ],
   },
   reducers: {
+    setEditValues: (state, action) => {
+      state.isModalOpen = true;
+      const { workout, singleFolder, singleSubFolder } = action.payload;
+      state.editValues = { ...workout, singleFolder, singleSubFolder };
+    },
+    closeModal: (state) => {
+      state.isModalOpen = false;
+    },
+    confirmEdit: (state, action) => {
+      const { newWorkout, oldWorkout, mainFolder, subFolder, id } =
+        action.payload;
+      const mainFolderWorkouts = state.workoutList[mainFolder] || {};
+      const subFolderWorkouts = mainFolderWorkouts[subFolder] || [];
+      let newSubFolder = [];
+      if (subFolderWorkouts) {
+        const workoutExists = subFolderWorkouts.find(
+          (w) => w.exerciseName === newWorkout.exerciseName
+        );
+        if (workoutExists) {
+          state.toaster = {
+            message: "Workout Exists",
+            visibility: true,
+            success: false,
+          };
+          return;
+        }
+        newSubFolder = subFolderWorkouts.map((workout) =>
+          workout.exerciseName === oldWorkout.exerciseName
+            ? { ...workout, ...newWorkout }
+            : workout
+        );
+      }
+      if (newSubFolder.length) {
+        state.toaster = {
+          message: "Workout Updated",
+          visibility: true,
+          success: true,
+        };
+      }
+      state.workoutList = {
+        ...state.workoutList,
+        [mainFolder]: {
+          ...mainFolderWorkouts,
+          [subFolder]: newSubFolder,
+        },
+      };
+      state.isModalOpen = false;
+    },
     setCurrentDayWorkouts: (state, action) => {
       state.currentDayWorkouts = action.payload;
     },
@@ -149,6 +207,7 @@ const workoutSlice = createSlice({
 
     addWorkout: (state, action) => {
       const { mainFolder, subFolder, workout, id } = action.payload;
+      console.log(id);
 
       const mainFolderWorkouts = state.workoutList[mainFolder] || {};
       const subFolderWorkouts = mainFolderWorkouts[subFolder] || [];
@@ -180,6 +239,28 @@ const workoutSlice = createSlice({
       };
     },
 
+    // removeWorkout: (state, action) => {
+    //   const { mainFolder, subFolder, exerciseName } = action.payload;
+    //   const mainFolderWorkouts = state.workoutList[mainFolder] || {};
+    //   const subFolderWorkouts = mainFolderWorkouts[subFolder] || [];
+
+    //   state.workoutList = {
+    //     ...state.workoutList,
+    //     [mainFolder]: {
+    //       ...mainFolderWorkouts,
+    //       [subFolder]: subFolderWorkouts.filter(
+    //         (w) => w.exerciseName !== exerciseName
+    //       ),
+    //     },
+    //   };
+    //   state.toaster = {
+    //     message: "Workout Removed",
+    //     visibility: true,
+    //     success: false,
+    //   };
+
+    // },
+
     removeWorkout: (state, action) => {
       const { mainFolder, subFolder, exerciseName } = action.payload;
       const mainFolderWorkouts = state.workoutList[mainFolder] || {};
@@ -194,11 +275,27 @@ const workoutSlice = createSlice({
           ),
         },
       };
-      state.toaster = {
-        message: "Workout Removed",
-        visibility: true,
-        success: false,
-      };
+
+      // Check if subFolder array is empty, and if so, delete it from mainFolder
+      if (state.workoutList[mainFolder][subFolder].length === 0) {
+        state.toaster = {
+          message: "Folder deleted",
+          visibility: true,
+          success: false,
+        };
+        delete state.workoutList[mainFolder][subFolder];
+      }
+
+      // Check if mainFolder object is now empty, and if so, delete it from workoutList
+      if (Object.keys(state.workoutList[mainFolder]).length === 0) {
+        delete state.workoutList[mainFolder];
+
+        state.toaster = {
+          message: "Folder deleted",
+          visibility: true,
+          success: false,
+        };
+      }
     },
     resetRest: (state, action) => {
       state.restCount = 0;
@@ -243,7 +340,10 @@ export const {
   setCurrentDayWorkouts,
   toggleWorkoutListVisibility,
   setToasterVisibility,
+  setEditValues,
   resetRest,
+  confirmEdit,
+  closeModal,
   setRestBtnVisibility,
   activateToaster,
   removeWorkout,

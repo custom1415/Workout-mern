@@ -4,8 +4,7 @@ import { WorkoutPage } from "./pages/Workout/Workout";
 import { Routes, Route } from "react-router-dom";
 import { CreateWorkoutPage } from "./pages/createWorkoutPage";
 import { WorkoutOrder } from "./pages/Workout-order/workoutOrder";
-import LandingPage from "./components/WorkoutStatus/landingPage";
-import  WorkoutList  from "./components/Workout List/workoutList";
+import WorkoutList from "./components/Workout List/workoutList";
 
 function App() {
   return (

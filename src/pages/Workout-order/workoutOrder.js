@@ -1,29 +1,21 @@
 import { useEffect, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { FaChevronLeft, FaHome } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Button } from "../../components/Button/button";
 import {
   selectWorkoutToBeDone,
   setCurrentDayWorkouts,
 } from "../../redux/workout/workout";
+import { NavBtns } from "./nav-btns";
 
 export const WorkoutOrder = () => {
   const workout = useSelector(selectWorkoutToBeDone);
   const [items, setItems] = useState(workout);
   const { day, list } = items;
   const navigate = useNavigate();
-  const [isDisabled, setisDisabled] = useState(false);
-
-  const check = () => {
-    if (!list.length) {
-      setisDisabled(true);
-      // return navigate("/create");
-    }
-  };
-  useEffect(() => {
-    check();
-  }, [isDisabled]);
 
   const onDragEnd = (result) => {
     if (!result.destination) return;
@@ -37,24 +29,26 @@ export const WorkoutOrder = () => {
     });
   };
   const dispatch = useDispatch();
-  const handleClick = () => {
-    dispatch(setCurrentDayWorkouts(list));
-    navigate("/workout");
+  const handleClick = (e) => {
+    if (e.target.dataset.location === "/workout") {
+      dispatch(setCurrentDayWorkouts(list));
+    }
+    navigate(e.target.dataset.location);
   };
   return (
     <div
-      className="modal fade fixed top-0 left-0 block w-full h-full outline-none overflow-x-hidden overflow-y-auto show bg-gray-900 "
+      className="fixed top-0 left-0 block w-full h-full overflow-x-hidden overflow-y-auto bg-gray-900 outline-none modal fade show "
       id="workoutOrder"
       tabIndex="-1"
       aria-labelledby="workout"
       aria-modal="true"
       role="dialog"
     >
-      <div className="modal-dialog modal-lg relative w-auto pointer-events-none">
+      <div className="relative w-auto pointer-events-none modal-dialog modal-lg">
         <div className="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-[#0b0220] bg-clip-padding rounded-md outline-none text-current">
-          <div className="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md">
+          <div className="flex items-center justify-between flex-shrink-0 p-4 border-b border-gray-200 modal-header rounded-t-md">
             <h5
-              className="md:text-xl supersm:text-md text-sm font-medium leading-normal text-primary"
+              className="text-xl font-medium leading-normal text-primary"
               id="workout"
             >
               <span className="text-gray-600 whitespace-nowrap">
@@ -62,17 +56,9 @@ export const WorkoutOrder = () => {
               </span>
               {day || ""}
             </h5>
-
-            <button
-              className={`py-2 supersm:px-3 px-2 lg:text-xl  md:text-md text-sm whitespace-nowrap  rounded-sm cursor-pointer text-gray-900  bg-primary hover:scale-[1.05] transition-all ${
-                isDisabled ? "hidden" : ""
-              }`}
-              onClick={handleClick}
-            >
-              Start <span className="supersm:inline-block hidden">Workout</span>
-            </button>
+            <NavBtns list={list} />
           </div>
-          <div className="modal-body p-4  md:text-md text-sm">
+          <div className="p-4 text-sm modal-body md:text-md">
             <DragDropContext onDragEnd={onDragEnd}>
               <Droppable droppableId="droppable">
                 {(provided, snapshot) => (
@@ -89,19 +75,19 @@ export const WorkoutOrder = () => {
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
-                              className="relative w-full bg-gray-900  text-gray-600 p-4 my-4 flex justify-between items-center"
+                              className="relative flex items-center justify-between w-full p-4 my-4 text-gray-600 bg-gray-900"
                             >
                               <p className="text-primary relative sm:left-0 left-10 sm:max-w-none max-w-[30%] overflow-hidden">
                                 {item.exerciseName}
                               </p>
                               <div className="flex">
-                                <p className=" ">
+                                <p className="">
                                   <span className="">Sets -</span>{" "}
                                   <span className="text-primary">
                                     {item.sets}
                                   </span>
                                 </p>
-                                <p className=" sm:ml-9 ml-5">
+                                <p className="ml-5 sm:ml-9">
                                   <span className="">Reps -</span>{" "}
                                   <span className="text-primary">
                                     {item.reps}
@@ -116,7 +102,7 @@ export const WorkoutOrder = () => {
                         </Draggable>
                       ))
                     ) : (
-                      <h1 className="text-white text-center">Empty List</h1>
+                      <h1 className="text-center text-white">Empty List</h1>
                     )}
                     {provided.placeholder}
                   </div>

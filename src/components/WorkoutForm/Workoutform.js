@@ -19,7 +19,6 @@ export const Form = () => {
   const dispatch = useDispatch();
 
   const defaultFormFields = {
-  
     exerciseName: "",
     sets: "",
     reps: "",
@@ -58,15 +57,6 @@ export const Form = () => {
   const resetFormFields = () => {
     setFormField(defaultFormFields);
   };
-
-  const { visibility: v } = useSelector(selectToaster);
-  useEffect(() => {
-    let timeout;
-    if (v) {
-      timeout = setTimeout(() => dispatch(setToasterVisibility(false)), 2000);
-    }
-    return () => clearTimeout(timeout);
-  }, [v]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -117,7 +107,14 @@ export const Form = () => {
     //   if (!folder[key]) return;
     // }
 
-    dispatch(addWorkout({ mainFolder, subFolder, workout: FormField,id:String(Date.now()).slice(-2)}));
+    dispatch(
+      addWorkout({
+        mainFolder,
+        subFolder,
+        workout: FormField,
+        id: String(Date.now()).slice(-5),
+      })
+    );
     resetFormFields();
   };
 
@@ -138,31 +135,33 @@ export const Form = () => {
   return (
     <div
       onKeyUp={submitOnEnter}
-      className="flex items-start justify-center py-12 px-4 sm:px-6 lg:px-8  w-full relative z-10  top-0 left-0 bg-gray-900 h-scree min-h-screen "
+      className="relative top-0 left-0 z-10 flex items-start justify-center w-full min-h-screen px-4 py-12 bg-gray-900 sm:px-6 lg:px-8 h-scree "
     >
       <Toast visible={visibility} message={message} success={success} />
 
-      <div className="shadow-black shadow-sm pt-8 pb-4 text-white w-full  flex items-center justify-between supersm:px-6 px-4 right-0 z-50 absolute -top-4 ">
-        <h2 className="text-center midsm:text-3xl supersm:text-2xl text-lg font-bold tracking-tight text-primary">
+      <div className="absolute right-0 z-50 flex items-center justify-between w-full px-4 pt-8 pb-4 text-white shadow-sm shadow-black supersm:px-6 -top-4 ">
+        <h2 className="text-lg font-bold tracking-tight text-center midsm:text-3xl supersm:text-2xl text-primary">
           Create your workout
         </h2>
 
         <span
-          className=" whitespace-nowrap inline-block px-3 py-2 bg-primary text-gray-900 rounded-sm cursor-pointer  hover:brightness-75 "
+          data-mdb-ripple="true"
+          data-mdb-ripple-color="light"
+          className="inline-block px-3 py-2 text-gray-900 rounded-sm cursor-pointer  whitespace-nowrap bg-primary hover:brightness-75"
           onClick={handleClick}
         >
           See List
         </span>
       </div>
-      <div className="w-full max-w-md space-y-8 mt-6 ">
+      <div className="w-full max-w-md mt-6 space-y-8 ">
         {/* <div>
-          <h2 className="text-center text-3xl font-bold tracking-tight text-primary">
+          <h2 className="text-3xl font-bold tracking-tight text-center text-primary">
             Create your workout
           </h2>
         </div> */}
         <form className="mt-8 space-y-6">
           <div className="rounded-md shadow-sm">
-            <div className="flex justify-between items-center h-auto  gap-4 mb-2">
+            <div className="flex items-center justify-between h-auto gap-4 mb-2">
               <SelectFolder getFolderHandler={getFolder} />
               <AddFolderModal addFolder={addFolderHandler} />
             </div>
@@ -242,14 +241,14 @@ export const Form = () => {
                 type="text"
                 rows="5"
                 required
-                className="relative  resize-none block w-full appearance-none rounded border-2 border-gray-800 px-3 py-2 text-gray-800 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                className="relative block w-full px-3 py-2 text-gray-800 placeholder-gray-500 border-2 border-gray-800 rounded appearance-none resize-none focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                 placeholder="Note"
               />
             </div>
           </div>
 
           <div>
-            <Button click={handleSubmit} create>
+            <Button onClick={handleSubmit} create>
               Create Workout
             </Button>
           </div>

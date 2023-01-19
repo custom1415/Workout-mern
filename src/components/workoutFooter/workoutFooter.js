@@ -29,13 +29,12 @@ export const WorkoutFooter = () => {
 
   return (
     <>
-      <footer className="w-full bg-[#09061b]
- h-12 fixed bottom-0 left-0 flex justify-between items-center px-4 z-50">
-        <Button data-name="prev" click={navigateCarousel}>
+      <footer className="w-full bg-[#09061b] h-12 fixed bottom-0 left-0 flex justify-between items-center px-4 z-50">
+        <Button data-name="prev" onClick={navigateCarousel}>
           <FaChevronLeft data-name="prev" />
         </Button>
         <h1 className="text-white">{workoutToShow}</h1>
-        <Button data-name="next" click={navigateCarousel}>
+        <Button data-name="next" onClick={navigateCarousel}>
           <FaChevronRight data-name="next" />
         </Button>
       </footer>

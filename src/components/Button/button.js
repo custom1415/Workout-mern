@@ -1,6 +1,6 @@
 export const Button = ({
   children,
-  click,
+  onClick,
   isFloatingBtn,
   isUpBtn,
   isCarouselBtn,
@@ -13,7 +13,7 @@ export const Button = ({
 }) => {
   return (
     <button
-      onClick={click}
+      onClick={onClick}
       type="button"
       data-mdb-ripple="true"
       data-mdb-ripple-color="light"
@@ -36,7 +36,7 @@ export const Button = ({
           : "px-8 py-3 rounded "
       } 
       ${isUpBtn && `bottom-8   z-30`} 
-      relative group/btn whitespace-nowrap  text-primary font-medium text-xs leading-tight uppercase shadow-md hover:bg-gray-900 hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg transition-all `}
+    btn-primary`}
       {...rest}
     >
       {children}
