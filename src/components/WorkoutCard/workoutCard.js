@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { FaEdit, FaStickyNote, FaTrashAlt } from "react-icons/fa";
 import { useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
 import { activateToaster, removeWorkout } from "../../redux/workout/workout";
 
 export const WorkoutCard = ({
@@ -26,6 +28,7 @@ export const WorkoutCard = ({
     note,
   
   };
+  
  
   console.log(singleFolder, singleSubFolder);
   const RemoveWorkout = () =>
