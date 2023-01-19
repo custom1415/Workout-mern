@@ -75,6 +75,8 @@ const RestTimer = ({
     dispatch(setRestBtnVisibility(false));
   }, []);
   useEffect(() => {
+    console.log(restCount);
+    console.log(isRunning);
     if (restCount >= 1 && !isRunning) {
       dispatch(setRestBtnVisibility(false));
     }
