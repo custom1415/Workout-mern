@@ -6,10 +6,12 @@ import {
   selectCurrentDayWorkouts,
   selectCurrentIndex,
   selectRestCount,
+  selectToaster,
   setRestBtnVisibility,
 } from "../../redux/workout/workout";
 import { Button } from "../Button/button";
 import RestTimer from "../rest-timer/restTimer";
+import Toast from "../toast/Toast";
 import { WorkoutCard } from "../WorkoutCard/workoutCard";
 import { WorkoutFooter } from "../workoutFooter/workoutFooter";
 import CurrentWorkouts from "./Current-Workouts";
@@ -103,9 +105,12 @@ export const WorkoutStatus = ({ shouldReset }) => {
       setProgress(0);
     }
   }, [shouldReset]);
+  const { visibility, success, message } = useSelector(selectToaster);
   window.addEventListener("resize", Check);
+
   return (
     <>
+        <Toast visible={visibility} success={success} message={message} />
       <div className="lg:grid lg:grid-cols-3  lg:gap-5 gap-2 midsm:mt-6 midsm:h-[72vh] h-[80%] relative  ">
         <div
           className={`bg-[#09061b] lg:w-full md:w-1/2  midsm:w-4/5 w-full px-3 pb-6 lg:static absolute overflow-y-scroll h-full  lg:translate-x-0 translate-x-[-50%] left-[50%]

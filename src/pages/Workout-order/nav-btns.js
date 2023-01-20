@@ -3,8 +3,8 @@ import { FaChevronLeft, FaHome } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/Button/button";
-import { setCurrentDayWorkouts } from "../../redux/workout/workout";
-export const NavBtns = ({ list }) => {
+import { setCurrentDayWorkouts ,WorkoutFolder} from "../../redux/workout/workout";
+export const NavBtns = ({ list, day }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isDisabled, setisDisabled] = useState(false);
@@ -21,6 +21,7 @@ export const NavBtns = ({ list }) => {
   const handleClick = (e) => {
     if (e.target.dataset.location === "/workout") {
       dispatch(setCurrentDayWorkouts(list));
+      dispatch(WorkoutFolder(day));
     }
     navigate(e.target.dataset.location);
   };
@@ -40,7 +41,7 @@ export const NavBtns = ({ list }) => {
       </button>
       <div className="fixed bottom-0 left-0 flex items-center justify-between w-screen gap-4 p-2 midsm:hidden">
         <Button data-location="/" onClick={handleClick}>
-          <FaHome data-location="/" />
+          <FaHome data-location="/" className="scale-150"/>
         </Button>
         <button
           data-location="/workout"
@@ -55,7 +56,7 @@ export const NavBtns = ({ list }) => {
           </span>
         </button>
         <Button onClick={handleClick} data-location="/workoutlist">
-          <FaChevronLeft data-location="/workoutlist" />
+          <FaChevronLeft data-location="/workoutlist"  className="scale-150"/>
         </Button>
       </div>
     </>

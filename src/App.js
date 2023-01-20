@@ -5,6 +5,7 @@ import { Routes, Route } from "react-router-dom";
 import { CreateWorkoutPage } from "./pages/createWorkoutPage";
 import { WorkoutOrder } from "./pages/Workout-order/workoutOrder";
 import WorkoutList from "./components/Workout List/workoutList";
+import { WorkoutComplete } from "./pages/workoutComplete";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Route path="/" element={<CreateWorkoutPage />} />
       <Route path="/workoutlist" element={<WorkoutList />} />
       <Route path="/workoutOrder" element={<WorkoutOrder />} />
+      <Route path="/complete" element={<WorkoutComplete />} />
     </Routes>
   );
 }

@@ -29,12 +29,7 @@ export const WorkoutOrder = () => {
     });
   };
   const dispatch = useDispatch();
-  const handleClick = (e) => {
-    if (e.target.dataset.location === "/workout") {
-      dispatch(setCurrentDayWorkouts(list));
-    }
-    navigate(e.target.dataset.location);
-  };
+
   return (
     <div
       className="fixed top-0 left-0 block w-full h-full overflow-x-hidden overflow-y-auto bg-gray-900 outline-none modal fade show "
@@ -56,7 +51,7 @@ export const WorkoutOrder = () => {
               </span>
               {day || ""}
             </h5>
-            <NavBtns list={list} />
+            <NavBtns list={list} day={day}/>
           </div>
           <div className="p-4 text-sm modal-body md:text-md">
             <DragDropContext onDragEnd={onDragEnd}>

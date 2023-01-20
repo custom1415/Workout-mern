@@ -6,13 +6,13 @@ export default function FooterCurrentWorkout({
   workoutsLeft,
 }) {
   return (
-    <>
-      <p className="mt-3 text-gray-500">
+    <div className="flex flex-col gap-2 mt-4 supersm:text-lg text-sm">
+      <p className=" text-gray-500">
         Workouts completed : {workoutsCompleted}
       </p>
-      <p className="mt-3 text-gray-500 ">Workouts left : {workoutsLeft}</p>
-      <p className="mt-3 text-gray-500">Current Set : {restsCompleted + 1}</p>
-      <p className="mt-3 text-gray-500 ">Rests Taken : {restsCompleted}</p>
-    </>
+      <p className=" text-gray-500 ">Workouts left : {workoutsLeft}</p>
+      <p className=" text-gray-500">Current Set : {restsCompleted + 1}</p>
+      <p className=" text-gray-500 ">Rests Taken : {restsCompleted}</p>
+    </div>
   );
 }

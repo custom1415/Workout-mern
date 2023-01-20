@@ -3,7 +3,7 @@ import { GrClose } from "react-icons/gr";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { Fragment, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { addFolderHandler } from "../../redux/workout/workout";
+import { activateToaster, addFolderHandler } from "../../redux/workout/workout";
 export const AddFolderModal = ({ addFolder }) => {
   const [subFolderLength, setSubFolderLength] = useState(1);
   const [SubFolderValue, setSubFolderValue] = useState({});
@@ -27,7 +27,10 @@ export const AddFolderModal = ({ addFolder }) => {
     setFormField({
       ...FormField,
     });
-
+    if (!Object.keys(SubFolderValue).length) {
+      dispatch(activateToaster("Sub folder cannot be empty"));
+      return;
+    }
     // addFolder(FormField, SubFolderValue);
     dispatch(addFolderHandler({ folderParam: FormField, SubFolderValue }));
     setFormField(defaultFolderStructure);

@@ -46,11 +46,26 @@ export const selectisModalOpen = createSelector(
   [selectWorkout],
   (state) => state.isModalOpen
 );
+export const selectWorkoutCompleted = createSelector(
+  [selectWorkout],
+  (state) => state.isWorkoutComplete
+);
+export const selectTotalTimeTaken = createSelector(
+  [selectWorkout],
+  (state) => state.totalTimeTaken
+);
+export const selectWorkoutToday = createSelector(
+  [selectWorkout],
+  (state) => state.workoutToday
+);
 const workoutSlice = createSlice({
   name: "workout",
   initialState: {
     isModalOpen: false,
     editValues: {},
+    workoutToday: "",
+    isWorkoutComplete: false,
+    totalTimeTaken: {},
     currentDayWorkouts: [],
     workoutToBeDone: {
       day: "",
@@ -70,39 +85,50 @@ const workoutSlice = createSlice({
       {
         mainFolder: "Push/Pull/Legs Split",
         subFolder: {
-          subFolder0: "Push",
-          subFolder1: "Pull",
-          subFolder2: "Legs",
+          Push: "Push",
+          Pull: "Pull",
+          Legs: "Legs",
         },
       },
       {
         mainFolder: "Bro Split",
         subFolder: {
-          subFolder0: "Chest",
-          subFolder1: "Back",
-          subFolder2: "Leg",
-          subFolder3: "Shoulder",
-          subFolder4: "Arm",
+          Chest: "Chest",
+          Back: "Back",
+          Leg: "Leg",
+          Shoulder: "Shoulder",
+          Arm: "Arm",
         },
       },
       {
         mainFolder: "Upper/Lower Split",
         subFolder: {
-          subFolder0: "Upper-Body",
-          subFolder1: "Lower-Body",
+          "Upper-Body": "Upper-Body",
+          "Lower-Body": "Lower-Body",
         },
       },
       {
         mainFolder: "Full Body Split",
         subFolder: {
-          subFolder0: "Day-1",
-          subFolder1: "Day-2",
-          subFolder2: "Day-3",
+          "Day-1": "Day-1",
+          "Day-2": "Day-2",
+          "Day-3": "Day-3",
         },
       },
     ],
   },
   reducers: {
+    WorkoutFolder: (state, action) => {
+      state.workoutToday = action.payload;
+    },
+    totalTimeTaken: (state, action) => {
+      const { secs, mins } = action.payload;
+
+      state.totalTimeTaken = { secs, mins };
+    },
+    workoutCompleted: (state, action) => {
+      state.isWorkoutComplete = action.payload;
+    },
     setEditValues: (state, action) => {
       state.isModalOpen = true;
       const { workout, singleFolder, singleSubFolder } = action.payload;
@@ -204,6 +230,39 @@ const workoutSlice = createSlice({
       }
     },
 
+    removeSubFolderHandler: (state, action) => {
+      const { mainFolder, subFolder } = action.payload;
+
+      let mainFolderIndex;
+      state.selectOptions.forEach((option, index) => {
+        if (option.mainFolder === mainFolder) {
+          mainFolderIndex = index;
+        }
+      });
+      let updatedFolders = [...state.selectOptions];
+
+      // Delete the specified subfolder from the main folder
+      delete updatedFolders[mainFolderIndex].subFolder[subFolder];
+
+      // Check if the main folder has any remaining subfolders
+      if (Object.keys(updatedFolders[mainFolderIndex].subFolder).length === 0) {
+        // If not, remove the main folder from the selectOptions array
+        updatedFolders.splice(mainFolderIndex, 1);
+      } else {
+        updatedFolders[mainFolderIndex].subFolder = {
+          ...updatedFolders[mainFolderIndex].subFolder,
+        };
+      }
+
+      // Update the selectOptions array in the state
+      state.selectOptions = updatedFolders;
+      state.toaster = {
+        message: `Removed "${subFolder}"`,
+        visibility: true,
+        success: true,
+      };
+    },
+
     addWorkout: (state, action) => {
       const { mainFolder, subFolder, workout, id } = action.payload;
 
@@ -236,28 +295,6 @@ const workoutSlice = createSlice({
         },
       };
     },
-
-    // removeWorkout: (state, action) => {
-    //   const { mainFolder, subFolder, exerciseName } = action.payload;
-    //   const mainFolderWorkouts = state.workoutList[mainFolder] || {};
-    //   const subFolderWorkouts = mainFolderWorkouts[subFolder] || [];
-
-    //   state.workoutList = {
-    //     ...state.workoutList,
-    //     [mainFolder]: {
-    //       ...mainFolderWorkouts,
-    //       [subFolder]: subFolderWorkouts.filter(
-    //         (w) => w.exerciseName !== exerciseName
-    //       ),
-    //     },
-    //   };
-    //   state.toaster = {
-    //     message: "Workout Removed",
-    //     visibility: true,
-    //     success: false,
-    //   };
-
-    // },
 
     removeWorkout: (state, action) => {
       const { mainFolder, subFolder, exerciseName } = action.payload;
@@ -345,6 +382,10 @@ export const {
   setRestBtnVisibility,
   activateToaster,
   removeWorkout,
+  removeSubFolderHandler,
+  totalTimeTaken,
+  WorkoutFolder,
   setRestCount,
+  workoutCompleted,
 } = workoutSlice.actions;
 export default workoutSlice.reducer;
